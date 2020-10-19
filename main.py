@@ -29,7 +29,7 @@ for pos in POSITIONS:
 for i in tableRectsList:
   tableCollideList.append(i.get_rect())
 
-PACMAN = Pac(10, 10, 25, 25)
+PACMAN = Pac(400, 400, 25, 25)
 
 while True:
   clock.tick(FPS)
