@@ -52,3 +52,9 @@ class Pac(pygame.sprite.Sprite):
     
     if self.routeMap[self.rect.center[0], self.rect.center[1]] == (255, 255, 255, 255):
       self.stopMove()
+    
+    if self.rect.right <= 155:
+      self.rect.left = 650
+    
+    if self.rect.left >= 651:
+      self.rect.right = 155

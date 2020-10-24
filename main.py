@@ -1,6 +1,6 @@
 import pygame, sys
 from pygame.locals import *
-from classes.table import mazePix, pgMaze
+from classes.maze import mazePix, pgMaze, coinsList, rectCoinsList
 from classes.pac import Pac
 
 screenSize = WIDTH, HEIGTH = 800, 700
@@ -14,6 +14,15 @@ clock = pygame.time.Clock()
 
 PACMAN = Pac(mazePix)
 
+def printText(display, text, midtop, size, color):  # function to write a text on screen
+    font = pygame.font.get_default_font()
+    standardFont = pygame.font.SysFont(font, size)
+    printFont = standardFont.render(text, 1, color)
+    fontArea = printFont.get_rect()
+    fontArea.midtop = midtop
+    display.blit(printFont, fontArea)
+
+coinsCollected = 0
 while True:
   clock.tick(FPS)
 
@@ -29,5 +38,19 @@ while True:
   window.fill((0,0,0))
   #window.blit(pgMaze, (155, 70))
   window.blit(pgMaze, (0, 0))
+
+  for i in coinsList:
+    i.renderCoin(window)
+
+  coinCollideIndex = PACMAN.rect.collidelist(rectCoinsList)
+  if coinCollideIndex != -1:
+    del rectCoinsList[coinCollideIndex]
+    del coinsList[coinCollideIndex]
+    coinsCollected += 10
+
   window.blit(PACMAN.sprite, PACMAN.rect)
+
+  pygame.draw.rect(window, (0,0,0), [647, 324, 55, 35]) # quadrados para suavizar o teletransporte do pacman
+  pygame.draw.rect(window, (0,0,0), [100, 324, 55, 35])
+  printText(window, str(coinsCollected), [750, 650], 30, (255, 255, 255))
   pygame.display.update()
