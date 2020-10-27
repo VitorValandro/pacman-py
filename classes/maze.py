@@ -6,6 +6,8 @@ maze = Image.open('mazeRoute.png') #imagem da rota a ser seguida pelas entidades
 mazePix = maze.load()
 print('Image size: ', maze.size)
 pgMaze = pygame.image.load('mazeGraph.png') #imagem gráfica do labirinto
+ghostsMa = Image.open('mazeRouteGhosts.png')
+ghostsMaze = ghostsMa.load()
 
 class Coin:
   COLOR = (255, 199, 0)
@@ -27,8 +29,8 @@ def generateCoins(): #inicia as posições das moedas quando o jogo começa
   while x <= 50:
     y = 0
     while y <= 50:
-      if mazePix[179+x*10, 112+y*10] == (0,0,0,255):
-        coinsList.append(Coin(179+x*10, 112+y*10))
+      if mazePix[159+x*10, 112+y*10] == (0,0,0,255):
+        coinsList.append(Coin(159+x*10, 112+y*10))
       y+=1
     x+=1
   return coinsList
