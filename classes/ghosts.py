@@ -5,18 +5,20 @@ import random
 from .maze import checkRoute
 from .pac import WHITE
 
-class Ghost(pygame.sprite.Sprite):
-  directions = {'UP': True, 'DOWN': False, 'LEFT': False, 'RIGHT': False}
+spritesheets = ["ghost_sprite.jpg", "ghost_sprite1.jpg", "ghost_sprite2.jpg", "ghost_sprite3.jpg"]
 
-  def __init__(self, routeMap):
-    super(Ghost, self).__init__()
-    self.sprite = pygame.image.load("ghost_sprite.jpg")
+class Ghost(pygame.sprite.Sprite):
+
+  def __init__(self, routeMap, spritesheet):
+    super().__init__()
+    self.sprite = pygame.image.load(spritesheet)
     self.rect = self.sprite.get_rect()
     self.rect.center = (399, 338)
     self.routeMap = routeMap
     self.ACELERATION = 1
-    self.decisions = 0
     self.changePosition = True
+    self.directions = {'UP': True, 'DOWN': False,
+                       'LEFT': False, 'RIGHT': False}
 
   def verifyChangePosition(self):
     if self.changePosition == True:
@@ -50,7 +52,7 @@ class Ghost(pygame.sprite.Sprite):
 
     if len(possibleDirections):
       randomDirection = random.choice(possibleDirections)
-      if randomDirection == oldDirection or randomDirection == getInverse(oldDirection) and len(possibleDirections) >= 3:
+      if randomDirection == oldDirection and len(possibleDirections) >= 3:
         randomDirection = random.choice(possibleDirections)
       self.directions[randomDirection] = True
 
@@ -85,13 +87,3 @@ class Ghost(pygame.sprite.Sprite):
       for i in self.directions:
         self.directions[i] = False
       self.directions['UP'] = True
-
-def getInverse(direction):
-  if direction == 'RIGHT':
-    return 'LEFT'
-  if direction == 'LEFT':
-    return 'RIGHT'
-  if direction == 'UP':
-    return 'DOWN'
-  if direction == 'DOWN':
-    return 'UP'

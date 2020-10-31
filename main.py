@@ -2,7 +2,7 @@ import pygame, sys
 from pygame.locals import *
 from classes.maze import mazePix, pgMaze, coinsList, rectCoinsList, ghostsMaze
 from classes.pac import Pac
-from classes.ghosts import Ghost
+from classes.ghosts import Ghost, spritesheets
 
 screenSize = WIDTH, HEIGTH = 800, 700
 
@@ -14,10 +14,9 @@ FPS = 60
 clock = pygame.time.Clock()
 
 PACMAN = Pac(mazePix)
-Ghost1 = Ghost(ghostsMaze)
-Ghost2 = Ghost(ghostsMaze)
-Ghost3 = Ghost(ghostsMaze)
-Ghost4 = Ghost(ghostsMaze)
+ghosts = []
+for i in range(4):
+  ghosts.append(Ghost(ghostsMaze, spritesheets[i])) 
 
 def printText(display, text, midtop, size, color):  # function to write a text on screen
     font = pygame.font.get_default_font()
@@ -41,13 +40,12 @@ while True:
       PACMAN.movement(event.key)
 
   PACMAN.move()
-  Ghost1.move()
-  Ghost2.move()
-  Ghost3.move()
-  Ghost4.move()
+  for ghost in ghosts:
+    ghost.move()
 
   if ghostDelay >= 1000:
-    Ghost1.verifyChangePosition()
+    for ghost in ghosts:
+      ghost.verifyChangePosition()
 
   window.fill((0,0,0))
   #window.blit(pgMaze, (155, 70))
@@ -63,10 +61,8 @@ while True:
     coinsCollected += 10
 
   window.blit(PACMAN.sprite, PACMAN.rect)
-  window.blit(Ghost1.sprite, Ghost1.rect)
-  window.blit(Ghost2.sprite, Ghost2.rect)
-  window.blit(Ghost4.sprite, Ghost3.rect)
-  window.blit(Ghost4.sprite, Ghost4.rect)
+  for ghost in ghosts:
+    window.blit(ghost.sprite, ghost.rect)
 
   pygame.draw.rect(window, (0,0,0), [647, 324, 55, 35]) # quadrados para suavizar o teletransporte do pacman
   pygame.draw.rect(window, (0,0,0), [100, 324, 55, 35])
