@@ -1,6 +1,7 @@
 import pygame, sys
 from pygame.locals import *
 from .maze import checkRoute
+from .ghosts import spritesheets
 
 WHITE = (255, 255, 255, 255)
 class Pac(pygame.sprite.Sprite):
@@ -12,8 +13,10 @@ class Pac(pygame.sprite.Sprite):
     super(Pac, self).__init__()
     self.sprite = pygame.image.load("pac_sprite.jpg")
     self.rect = self.sprite.get_rect()
-    self.rect.center = (180, 113)
+    self.rect.center = (400, 500)
     self.routeMap = routeMap
+    self.lifes = 3
+    self.invencibility = False
 
   def movement(self, eventKey): #função pra mudar a direção do personagem
     oldDirection = ''
@@ -56,3 +59,19 @@ class Pac(pygame.sprite.Sprite):
     
     if self.rect.left >= 651:
       self.rect.right = 155
+    
+  def die(self):
+    pygame.time.wait(500)
+    self.stopMove()
+    self.lifes -= 1
+    self.rect.center = (400, 500)
+  
+  def cherryPower(self, ghostsList, flag):
+    self.invencibility = flag
+    if self.invencibility:
+      for ghost in ghostsList:
+        ghost.sprite = pygame.image.load("ghost_sprite2.jpg")
+    else:
+      for i in range(4):
+        ghostsList[i].sprite = pygame.image.load(spritesheets[i])
+      

@@ -1,6 +1,7 @@
 import pygame, sys
 from pygame.locals import *
 from PIL import Image
+import random
 
 maze = Image.open('mazeRoute.png') #imagem da rota a ser seguida pelas entidades
 mazePix = maze.load()
@@ -23,6 +24,21 @@ class Coin:
   def getRect(self): #fornecer o quadrado para analisar colisão
     return pygame.Rect(self.x, self.y, self.WIDTH, self.HEIGTH)
 
+class Cherry:
+  COLOR = (255, 0, 0)
+  WIDTH, HEIGTH = 10, 10
+
+  def __init__(self, x, y):
+    self.x = x
+    self.y = y
+
+  def renderCherry(self, surface):  # pintar as cerejas no labirinto
+    pygame.draw.rect(surface, self.COLOR, [self.x, self.y, self.WIDTH, self.HEIGTH])
+
+  def getRect(self):  # fornecer o quadrado para analisar colisão
+    return pygame.Rect(self.x, self.y, self.WIDTH, self.HEIGTH)
+
+
 def generateCoins(): #inicia as posições das moedas quando o jogo começa
   x = 0
   coinsList = []
@@ -39,6 +55,18 @@ coinsList = generateCoins()
 rectCoinsList = []
 for i in coinsList:
   rectCoinsList.append(i.getRect())
+
+def generateCherry():
+  cherryList = []
+  x = random.randint(0, 50)
+  y = random.randint(0, 50)
+  while mazePix[159+x*10, 112+y*10] != (0, 0, 0, 255):
+    x = random.randint(0, 50)
+    y = random.randint(0, 50)
+
+  return Cherry(159+x*10, 112+y*10)
+
+cherryList = []
 
 def checkRoute(obj, xAdd, yAdd, routeMap, color, equal=False): #checa a cor da imagem da rota das entidades
   if equal: #analisa se a operação é igual (==) ou diferente (!=)

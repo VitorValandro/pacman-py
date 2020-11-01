@@ -1,6 +1,6 @@
 import pygame, sys
 from pygame.locals import *
-from classes.maze import mazePix, pgMaze, coinsList, rectCoinsList, ghostsMaze
+from classes.maze import mazePix, pgMaze, coinsList, rectCoinsList, ghostsMaze, generateCherry, cherryList
 from classes.pac import Pac
 from classes.ghosts import Ghost, spritesheets
 
@@ -15,8 +15,10 @@ clock = pygame.time.Clock()
 
 PACMAN = Pac(mazePix)
 ghosts = []
+ghostsRect = []
 for i in range(4):
   ghosts.append(Ghost(ghostsMaze, spritesheets[i])) 
+  ghostsRect.append(ghosts[i].rect)
 
 def printText(display, text, midtop, size, color):  # function to write a text on screen
     font = pygame.font.get_default_font()
@@ -27,11 +29,11 @@ def printText(display, text, midtop, size, color):  # function to write a text o
     display.blit(printFont, fontArea)
 
 coinsCollected = 0
-ghostDelay = 0
+Delay = 0
 while True:
   time = clock.tick(FPS)
 
-  ghostDelay += time
+  Delay += time
   for event in pygame.event.get(): #verifica os eventos do teclado do usuário
     if event.type == QUIT:
       pygame.quit()
@@ -43,22 +45,48 @@ while True:
   for ghost in ghosts:
     ghost.move()
 
-  if ghostDelay >= 1000:
+  if Delay >= 1000:
     for ghost in ghosts:
       ghost.verifyChangePosition()
+  
+  if Delay >= 10000:
+    PACMAN.cherryPower(ghosts, False)
+    if Delay >= 20000 and len(cherryList) < 2:
+      cherryList.append(generateCherry())
+      Delay = 1000
 
   window.fill((0,0,0))
   #window.blit(pgMaze, (155, 70))
   window.blit(pgMaze, (0, 0))
 
-  for i in coinsList:
-    i.renderCoin(window)
+  for coin in coinsList:
+    coin.renderCoin(window)
+  for cherry in cherryList:
+    cherry.renderCherry(window)
 
   coinCollideIndex = PACMAN.rect.collidelist(rectCoinsList)
   if coinCollideIndex != -1:
     del rectCoinsList[coinCollideIndex]
     del coinsList[coinCollideIndex]
     coinsCollected += 10
+  
+  rectCherryList = []
+  for cherry in cherryList:
+    rectCherryList.append(cherry.getRect())
+  cherryCollideIndex = PACMAN.rect.collidelist(rectCherryList)
+  if cherryCollideIndex != -1:
+    del rectCherryList[cherryCollideIndex]
+    del cherryList[cherryCollideIndex]
+    PACMAN.cherryPower(ghosts, True)
+    Delay = 1000
+  
+  ghostCollideIndex = PACMAN.rect.collidelist(ghostsRect)
+  if ghostCollideIndex != -1:
+    if not PACMAN.invencibility:
+      PACMAN.die()
+      pygame.time.wait(500)
+    else:
+      ghosts[ghostCollideIndex].die()
 
   window.blit(PACMAN.sprite, PACMAN.rect)
   for ghost in ghosts:
