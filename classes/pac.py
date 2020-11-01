@@ -3,6 +3,8 @@ from pygame.locals import *
 from .maze import checkRoute
 from .ghosts import spritesheets
 
+pacman_spritesheet = pygame.image.load("spritesheet.png")
+
 WHITE = (255, 255, 255, 255)
 class Pac(pygame.sprite.Sprite):
   COLOR = (125, 125, 125)
@@ -11,7 +13,8 @@ class Pac(pygame.sprite.Sprite):
 
   def __init__(self, routeMap):
     super(Pac, self).__init__()
-    self.sprite = pygame.image.load("pac_sprite.jpg")
+    self.spritesheet = getSpriteFrame('RIGHT')
+    self.sprite = self.spritesheet[0]
     self.rect = self.sprite.get_rect()
     self.rect.center = (400, 500)
     self.routeMap = routeMap
@@ -44,12 +47,16 @@ class Pac(pygame.sprite.Sprite):
   def move(self): #função que muda a posição do personagem a cada ciclo
     if self.directions['UP'] and checkRoute(self, 0, -1, self.routeMap, WHITE):
       self.rect.move_ip(0, -(self.ACELERATION))
+      self.spritesheet = getSpriteFrame('UP')
     if self.directions['DOWN'] and checkRoute(self, 0, +1, self.routeMap, WHITE):
       self.rect.move_ip(0, self.ACELERATION)
+      self.spritesheet = getSpriteFrame('DOWN')
     if self.directions['LEFT'] and checkRoute(self, -1, 0, self.routeMap, WHITE):
       self.rect.move_ip(-(self.ACELERATION), 0)
+      self.spritesheet = getSpriteFrame('LEFT')
     if self.directions['RIGHT'] and checkRoute(self, +1, 0, self.routeMap, WHITE):
       self.rect.move_ip(self.ACELERATION, 0)
+      self.spritesheet = getSpriteFrame('RIGHT')
     
     if self.routeMap[self.rect.center[0], self.rect.center[1]] == (255, 255, 255, 255):
       self.stopMove()
@@ -75,3 +82,21 @@ class Pac(pygame.sprite.Sprite):
       for i in range(4):
         ghostsList[i].sprite = pygame.image.load(spritesheets[i])
       
+def getSpriteFrame(direction):
+  if direction == 'RIGHT':
+    startY = 0
+  if direction == 'LEFT':
+    startY = 25
+  if direction == 'UP':
+    startY = 50
+  if direction == 'DOWN':
+    startY = 75
+  
+  pacman_frames = [
+      pacman_spritesheet.subsurface(Rect(0, startY, 25, 25)),
+      pacman_spritesheet.subsurface(Rect(25, startY, 25, 25)),
+      pacman_spritesheet.subsurface(Rect(50, startY, 25, 25)),
+      pacman_spritesheet.subsurface(Rect(75, startY, 25, 25)),
+  ]
+
+  return pacman_frames

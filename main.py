@@ -30,10 +30,14 @@ def printText(display, text, midtop, size, color):  # function to write a text o
 
 coinsCollected = 0
 Delay = 0
+spriteDelay = 0
+frameCount = 0
 while True:
   time = clock.tick(FPS)
+  PACMAN.sprite = PACMAN.spritesheet[frameCount]
 
   Delay += time
+  spriteDelay += time
   for event in pygame.event.get(): #verifica os eventos do teclado do usuário
     if event.type == QUIT:
       pygame.quit()
@@ -96,3 +100,10 @@ while True:
   pygame.draw.rect(window, (0,0,0), [100, 324, 55, 35])
   printText(window, str(coinsCollected), [750, 650], 30, (255, 255, 255))
   pygame.display.update()
+
+  if spriteDelay >= 100:
+    if frameCount <3: 
+      frameCount +=1 
+    else: 
+      frameCount = 0
+    spriteDelay = 0

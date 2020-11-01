@@ -87,5 +87,8 @@ class Ghost(pygame.sprite.Sprite):
       self.directions['UP'] = True
 
   def die(self):
-    pygame.time.wait(500)
     self.rect.center = (399, 338)
+    pygame.time.wait(500)
+    for i in self.directions:
+      self.directions[i] = False
+    self.directions['UP'] = True
