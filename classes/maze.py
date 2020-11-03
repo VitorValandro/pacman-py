@@ -3,6 +3,8 @@ from pygame.locals import *
 from PIL import Image
 import random
 
+general_spritesheet = pygame.image.load("spritesheet.png")
+
 maze = Image.open('mazeRoute.png') #imagem da rota a ser seguida pelas entidades
 mazePix = maze.load()
 print('Image size: ', maze.size)
@@ -31,12 +33,10 @@ class Cherry:
   def __init__(self, x, y):
     self.x = x
     self.y = y
-
-  def renderCherry(self, surface):  # pintar as cerejas no labirinto
-    pygame.draw.rect(surface, self.COLOR, [self.x, self.y, self.WIDTH, self.HEIGTH])
+    self.sprite = general_spritesheet.subsurface(Rect(50, 100, 25, 25))
 
   def getRect(self):  # fornecer o quadrado para analisar colisão
-    return pygame.Rect(self.x, self.y, self.WIDTH, self.HEIGTH)
+    return pygame.Rect(self.x-12, self.y-12, 25, 25)
 
 
 def generateCoins(): #inicia as posições das moedas quando o jogo começa

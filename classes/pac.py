@@ -1,9 +1,9 @@
 import pygame, sys
 from pygame.locals import *
 from .maze import checkRoute
-from .ghosts import spritesheets
+from .ghosts import ghostGetSpriteFrame, ghostNames
 
-pacman_spritesheet = pygame.image.load("spritesheet.png")
+general_spritesheet = pygame.image.load("spritesheet.png")
 
 WHITE = (255, 255, 255, 255)
 class Pac(pygame.sprite.Sprite):
@@ -13,13 +13,14 @@ class Pac(pygame.sprite.Sprite):
 
   def __init__(self, routeMap):
     super(Pac, self).__init__()
-    self.spritesheet = getSpriteFrame('RIGHT')
+    self.spritesheet = pacManGetSpriteFrame('RIGHT')
     self.sprite = self.spritesheet[0]
     self.rect = self.sprite.get_rect()
     self.rect.center = (400, 500)
     self.routeMap = routeMap
     self.lifes = 3
     self.invencibility = False
+    self.frameCount = 0
 
   def movement(self, eventKey): #função pra mudar a direção do personagem
     oldDirection = ''
@@ -45,18 +46,21 @@ class Pac(pygame.sprite.Sprite):
         self.directions[i] = False
 
   def move(self): #função que muda a posição do personagem a cada ciclo
+    if self.frameCount >= 3:
+      self.frameCount = 0
+    
     if self.directions['UP'] and checkRoute(self, 0, -1, self.routeMap, WHITE):
       self.rect.move_ip(0, -(self.ACELERATION))
-      self.spritesheet = getSpriteFrame('UP')
+      self.spritesheet = pacManGetSpriteFrame('UP')
     if self.directions['DOWN'] and checkRoute(self, 0, +1, self.routeMap, WHITE):
       self.rect.move_ip(0, self.ACELERATION)
-      self.spritesheet = getSpriteFrame('DOWN')
+      self.spritesheet = pacManGetSpriteFrame('DOWN')
     if self.directions['LEFT'] and checkRoute(self, -1, 0, self.routeMap, WHITE):
       self.rect.move_ip(-(self.ACELERATION), 0)
-      self.spritesheet = getSpriteFrame('LEFT')
+      self.spritesheet = pacManGetSpriteFrame('LEFT')
     if self.directions['RIGHT'] and checkRoute(self, +1, 0, self.routeMap, WHITE):
       self.rect.move_ip(self.ACELERATION, 0)
-      self.spritesheet = getSpriteFrame('RIGHT')
+      self.spritesheet = pacManGetSpriteFrame('RIGHT')
     
     if self.routeMap[self.rect.center[0], self.rect.center[1]] == (255, 255, 255, 255):
       self.stopMove()
@@ -77,26 +81,21 @@ class Pac(pygame.sprite.Sprite):
     self.invencibility = flag
     if self.invencibility:
       for ghost in ghostsList:
-        ghost.sprite = pygame.image.load("ghost_sprite2.jpg")
+        ghost.scared = True
     else:
       for i in range(4):
-        ghostsList[i].sprite = pygame.image.load(spritesheets[i])
+        ghostsList[i].scared = False
       
-def getSpriteFrame(direction):
-  if direction == 'RIGHT':
-    startY = 0
-  if direction == 'LEFT':
-    startY = 25
-  if direction == 'UP':
-    startY = 50
-  if direction == 'DOWN':
-    startY = 75
+def pacManGetSpriteFrame(direction):
+  yPos = {'RIGHT': 0, 'LEFT': 25, 'UP': 50, 'DOWN':75}
+  
+  startY = yPos[direction]
   
   pacman_frames = [
-      pacman_spritesheet.subsurface(Rect(0, startY, 25, 25)),
-      pacman_spritesheet.subsurface(Rect(25, startY, 25, 25)),
-      pacman_spritesheet.subsurface(Rect(50, startY, 25, 25)),
-      pacman_spritesheet.subsurface(Rect(75, startY, 25, 25)),
+      general_spritesheet.subsurface(Rect(0, startY, 25, 25)),
+      general_spritesheet.subsurface(Rect(25, startY, 25, 25)),
+      general_spritesheet.subsurface(Rect(50, startY, 25, 25)),
+      general_spritesheet.subsurface(Rect(75, startY, 25, 25)),
   ]
 
   return pacman_frames

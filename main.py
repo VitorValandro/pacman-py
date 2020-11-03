@@ -2,7 +2,7 @@ import pygame, sys
 from pygame.locals import *
 from classes.maze import mazePix, pgMaze, coinsList, rectCoinsList, ghostsMaze, generateCherry, cherryList
 from classes.pac import Pac
-from classes.ghosts import Ghost, spritesheets
+from classes.ghosts import Ghost, ghostNames
 
 screenSize = WIDTH, HEIGTH = 800, 700
 
@@ -17,7 +17,7 @@ PACMAN = Pac(mazePix)
 ghosts = []
 ghostsRect = []
 for i in range(4):
-  ghosts.append(Ghost(ghostsMaze, spritesheets[i])) 
+  ghosts.append(Ghost(ghostsMaze, ghostNames[i])) 
   ghostsRect.append(ghosts[i].rect)
 
 def printText(display, text, midtop, size, color):  # function to write a text on screen
@@ -31,10 +31,12 @@ def printText(display, text, midtop, size, color):  # function to write a text o
 coinsCollected = 0
 Delay = 0
 spriteDelay = 0
-frameCount = 0
+
 while True:
   time = clock.tick(FPS)
-  PACMAN.sprite = PACMAN.spritesheet[frameCount]
+  PACMAN.sprite = PACMAN.spritesheet[PACMAN.frameCount]
+  for ghost in ghosts:
+    ghost.sprite = ghost.spritesheet[ghost.frameCount]
 
   Delay += time
   spriteDelay += time
@@ -65,8 +67,6 @@ while True:
 
   for coin in coinsList:
     coin.renderCoin(window)
-  for cherry in cherryList:
-    cherry.renderCherry(window)
 
   coinCollideIndex = PACMAN.rect.collidelist(rectCoinsList)
   if coinCollideIndex != -1:
@@ -95,6 +95,8 @@ while True:
   window.blit(PACMAN.sprite, PACMAN.rect)
   for ghost in ghosts:
     window.blit(ghost.sprite, ghost.rect)
+  for cherry in cherryList:
+    window.blit(cherry.sprite, cherry.getRect())
 
   pygame.draw.rect(window, (0,0,0), [647, 324, 55, 35]) # quadrados para suavizar o teletransporte do pacman
   pygame.draw.rect(window, (0,0,0), [100, 324, 55, 35])
@@ -102,8 +104,6 @@ while True:
   pygame.display.update()
 
   if spriteDelay >= 100:
-    if frameCount <3: 
-      frameCount +=1 
-    else: 
-      frameCount = 0
+    PACMAN.frameCount += 1
+    ghost.frameCount += 1
     spriteDelay = 0
