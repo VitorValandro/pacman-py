@@ -51,11 +51,6 @@ def generateCoins(): #inicia as posições das moedas quando o jogo começa
     x+=1
   return coinsList
 
-coinsList = generateCoins()
-rectCoinsList = []
-for i in coinsList:
-  rectCoinsList.append(i.getRect())
-
 def generateCherry():
   cherryList = []
   x = random.randint(0, 50)

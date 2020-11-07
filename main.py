@@ -6,4 +6,5 @@ from screens.startMenu import menu
 
 menu()
 while True:
-  menu(message=startGame())
+  gameResult = startGame()
+  menu(message=gameResult[0], points=gameResult[1])
