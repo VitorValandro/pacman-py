@@ -1,14 +1,13 @@
 import pygame, sys
 from pygame.locals import *
 
-from classes.maze import mazePix, pgMaze, generateCoins, ghostsMaze, generateCherry, cherryList
+from classes.maze import mazePix, pgMaze, generateCoins, ghostsMaze, generateCherry
 from classes.pac import Pac, general_spritesheet
 from classes.ghosts import Ghost, ghostNames
 
-def printText(display, text, midtop, size, color):  # function to write a text on screen
-  font = pygame.font.get_default_font()
-  standardFont = pygame.font.SysFont(font, size)
-  printFont = standardFont.render(text, 1, color)
+def printText(display, text, midtop, size, color, font):  # function to write a text on screen
+  font = pygame.font.Font(font, size)
+  printFont = font.render(text, 1, color)
   fontArea = printFont.get_rect()
   fontArea.midtop = midtop
   display.blit(printFont, fontArea)
@@ -37,11 +36,11 @@ def startGame():
   for i in coinsList:
     rectCoinsList.append(i.getRect())
 
+  cherryList = []
+
   coinsCollected = 0
   Delay = 0
   spriteDelay = 0
-
-  winPoints = len(coinsList)
 
   while not closeGame:
     time = clock.tick(FPS)
@@ -122,7 +121,8 @@ def startGame():
       # quadrados para suavizar o teletransporte do pacman
       pygame.draw.rect(window, (0, 0, 0), [647, 324, 55, 35])
       pygame.draw.rect(window, (0, 0, 0), [100, 324, 55, 35])
-      printText(window, str(coinsCollected), [750, 650], 30, (255, 255, 255))
+      printText(window, str(coinsCollected), [600, 645], 40, (255, 255, 255), 'screens\8-bit.TTF')
+      printText(window, 'PACMAN', [400, 30], 40, (255, 199, 0), 'screens\pac-font.TTF')
       pygame.display.update()
 
       if PACMAN.lifes == 0:
@@ -137,10 +137,19 @@ def startGame():
     if state == 'PAUSE':
       pygame.display.flip()
       window.fill((0, 0, 0))
-      printText(window, 'YOUR SCORE:', (400, 250), 40, (255, 255, 255))
-      printText(window, str(coinsCollected), (400, 300), 50, (255, 255, 255))
+      printText(window, 'PACMAN', [400, 70], 50, (255, 199, 0), 'screens\pac-font.TTF')
+      printText(window, 'GAME PAUSED', (400, 170), 75, (255, 255, 255), 'screens\8-bit.TTF')
+      printText(window, str(coinsCollected), (400, 260), 40,(38, 2, 255), 'screens\8-bit.TTF')
+      printText(window, 'Avoid the ghosts and', (400, 320), 40, (255, 255, 255), 'screens\8-bit.TTF')
+      printText(window, 'eat all coins to win', (400, 360), 40, (255, 255, 255), 'screens\8-bit.TTF')
+      printText(window, 'Movement -> Arrow Keys', (400, 420), 40, (255, 255, 255), 'screens\8-bit.TTF')
+      printText(window, 'Power -> Eat Cherry', (400, 460), 40, (255, 255, 255), 'screens\8-bit.TTF')
+      printText(window, 'PRESS H TO BACK GAME', (400, 570), 50, (255, 255, 255), 'screens\8-bit.TTF')
       pygame.display.flip()
       for event in pygame.event.get():  # verifica os eventos do teclado do usuário
-          if event.type == pygame.KEYDOWN:
-              if event.key == K_h:
-                state = 'RUNNING'
+        if event.type == QUIT:
+          pygame.quit()
+          sys.exit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == K_h:
+              state = 'RUNNING'

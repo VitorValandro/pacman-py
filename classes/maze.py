@@ -61,8 +61,6 @@ def generateCherry():
 
   return Cherry(159+x*10, 112+y*10)
 
-cherryList = []
-
 def checkRoute(obj, xAdd, yAdd, routeMap, color, equal=False): #checa a cor da imagem da rota das entidades
   if equal: #analisa se a operação é igual (==) ou diferente (!=)
     if routeMap[obj.rect.center[0]+xAdd, obj.rect.center[1]+yAdd] == color:

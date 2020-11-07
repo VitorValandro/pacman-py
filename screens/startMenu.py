@@ -20,13 +20,26 @@ def menu(message='PACMAN', points=None):
         if event.key == K_RETURN:
           closeMenu = True
     window.fill((0,0,0))
-    if points != None:
-      printText(window, message, (400, 100), 50, (255, 255, 255))
-      printText(window, 'YOUR SCORE:', (400, 250), 40, (255, 255, 255))
-      printText(window, str(points), (400, 300), 50, (255, 255, 255))
-      printText(window, 'PRESS ENTER TO PLAY AGAIN', (400, 500), 40, (255, 255, 255))
+    if message == 'YOU WIN':
+      printText(window, 'PACMAN', [400, 70], 50, (255, 199, 0), 'screens\pac-font.TTF')
+      printText(window, message, (400, 170), 75, (255, 255, 255), 'screens\8-bit.TTF')
+      printText(window, 'YOUR SCORE:', (400, 270), 40,(255, 255, 255), 'screens\8-bit.TTF')
+      printText(window, str(points), (400, 320), 50,(255, 255, 255), 'screens\8-bit.TTF')
+      printText(window, '1  2 3 4 5', [400, 420], 50, (255, 199, 0), 'screens\pac-font.TTF')
+      printText(window, 'PRESS ENTER TO PLAY AGAIN', (400, 570), 40, (255, 255, 255), 'screens\8-bit.TTF')
+      pygame.display.flip()
+    if message == 'GAME OVER':
+      printText(window, 'PACMAN', [400, 70], 50, (38, 2, 255), 'screens\pac-font.TTF')
+      printText(window, message, (400, 170), 75, (255, 255, 255), 'screens\8-bit.TTF')
+      printText(window, 'YOUR SCORE:', (400, 270), 40,(255, 255, 255), 'screens\8-bit.TTF')
+      printText(window, str(points), (400, 320), 50,(255, 255, 255), 'screens\8-bit.TTF')
+      printText(window, '9 9  1  9 9', [400, 420], 50, (38, 2, 255), 'screens\pac-font.TTF')
+      printText(window, 'PRESS ENTER TO PLAY AGAIN', (400, 570), 40, (255, 255, 255), 'screens\8-bit.TTF')
       pygame.display.flip()
     else:
-      printText(window, message, (400, 300), 50, (255, 255, 255))
-      printText(window, 'PRESS ENTER TO START', (400, 350), 50, (255, 255, 255))
+      printText(window, 'PACMAN', [400, 90], 60,(255, 199, 0), 'screens\pac-font.TTF')
+      printText(window, '1', [200, 300], 90, (255, 199, 0), 'screens\pac-font.TTF')
+      printText(window, '2 2 2 2', [410, 300], 90, (201, 0, 0), 'screens\pac-font.TTF')
+      printText(window, '9', [600, 300],90, (38, 2, 255), 'screens\pac-font.TTF')
+      printText(window, 'PRESS ENTER TO START GAME', (400, 540), 50, (255, 255, 255), 'screens\8-bit.TTF')
       pygame.display.flip()
