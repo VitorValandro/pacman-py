@@ -1,6 +1,10 @@
-import pygame, sys
-from pygame.locals import *
+'''
+Arquivo principal
 
+RODE ESTE ARQUIVO PARA INICIAR O JOGO
+'''
+
+# Importa os arquivos locais usados #
 from screens.startGame import startGame
 from screens.startMenu import menu
 

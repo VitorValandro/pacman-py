@@ -1,36 +1,46 @@
+'''
+Este arquivo é responsável por gerenciar
+todas as funcionalidades envolvendo os fantasmas
+'''
+
+# Importando módulos externos #
 import pygame, sys
 from pygame.locals import *
 import random
 
+# Importando arquivos locais #
 from .maze import checkRoute
 
+# Carrega a spritesheet para splitar
 general_spritesheet = pygame.image.load("spritesheet.png")
 
 WHITE = (255, 255, 255, 255)
 ghostNames = ['Blinky', 'Clyde', 'Pinky', 'Inky']
 
+# Classe principal dos fantasmas
 class Ghost(pygame.sprite.Sprite):
-  VELOCITY = 1
-  def __init__(self, routeMap, name):
+  VELOCITY = 1 
+  def __init__(self, routeMap, name): # Método construtor
     super().__init__()
     self.name = name
     self.scared = False
-    self.spritesheet = ghostGetSpriteFrame('UP', self.name, self.scared)
+    # Inicia com o sprite do fantasma olhando pra cima
+    self.spritesheet = ghostGetSpriteFrame('UP', self.name, self.scared) 
     self.sprite = self.spritesheet[0]
     self.rect = self.sprite.get_rect()
-    self.rect.center = (399, 338)
-    self.routeMap = routeMap
+    self.rect.center = (399, 338) # Posição inicial do fantasma
+    self.routeMap = routeMap # Carrega a rota que os fantasmas podem seguir
     self.changePosition = True
     self.frameCount = 0
     self.directions = {'UP': True, 'DOWN': False, 'LEFT': False, 'RIGHT': False}
 
-  def verifyChangePosition(self):
+  def verifyChangePosition(self): # Altera a flag para mudar a posição
     if self.changePosition == True:
       self.changePosition = False
     else:
       self.changePosition = True
 
-  def direcoesPossiveis(self, oldDirection='', directionArray=''):
+  def direcoesPossiveis(self, oldDirection='', directionArray=''): # Verifica quais as posições possíveis de seguir
     possibleDirections = []
     if checkRoute(self, 0, -10, self.routeMap, WHITE):
       if oldDirection != '': directionArray[oldDirection] = False
@@ -47,11 +57,11 @@ class Ghost(pygame.sprite.Sprite):
     
     return possibleDirections
 
-  def changeDirection(self): #verifica todas as direções que o fantasma pode seguir e decide randomicamente
-    oldDirection = ''
+  def changeDirection(self): # Verifica todas as direções que o fantasma pode seguir e decide randomicamente
+    oldDirection = '' 
     for i in self.directions:
       if self.directions[i]:
-        oldDirection = i
+        oldDirection = i # Armazena a direção que o fantasma estava seguindo
     possibleDirections = self.direcoesPossiveis(oldDirection=oldDirection, directionArray=self.directions)
 
     if len(possibleDirections):
@@ -60,8 +70,8 @@ class Ghost(pygame.sprite.Sprite):
         randomDirection = random.choice(possibleDirections)
       self.directions[randomDirection] = True
 
-  def move(self): #troca a posição do fantasma a cada ciclo
-    if self.frameCount >= 1:
+  def move(self): # Troca a posição do fantasma a cada ciclo
+    if self.frameCount >= 1: # Troca o frame do sprite
       self.frameCount = 0
 
     for i in self.directions:
@@ -88,25 +98,25 @@ class Ghost(pygame.sprite.Sprite):
     elif len(self.direcoesPossiveis()) >= 3:
         self.changeDirection()
 
-    if self.rect.right <= 155:  # teletransporte do fantasma
+    if self.rect.right <= 155:  # Teletransporte do fantasma quando atinge a borda
       self.rect.left = 650
 
     if self.rect.left >= 651:
       self.rect.right = 155
     
-    if self.rect.center == (399, 341): # verifica se ele está no ponto de início
+    if self.rect.center == (399, 341): # Verifica se ele está no ponto de início
       for i in self.directions:
         self.directions[i] = False
       self.directions['UP'] = True
 
-  def die(self):
+  def die(self): # Método que retorna ele para sua posição inicial
     self.rect.center = (399, 338)
     pygame.time.wait(500)
     for i in self.directions:
       self.directions[i] = False
     self.directions['UP'] = True
   
-def ghostGetSpriteFrame(direction, name, scared):
+def ghostGetSpriteFrame(direction, name, scared): # Método para gerenciar o split da spritesheet
   yPos = {'RIGHT': 0, 'LEFT': 25, 'UP': 50, 'DOWN': 75}
   xPos = {'Blinky': 100, 'Clyde': 150, 'Pinky': 200, 'Inky': 250}
   if scared:

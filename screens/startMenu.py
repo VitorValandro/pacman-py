@@ -1,7 +1,11 @@
+'''
+Arquivo que gerencia a tela de menu inicial e final do jogo
+'''
+
 import pygame, sys
 from pygame.locals import *
 
-from .startGame import printText
+from .pauseGame import printText
 
 screenSize = WIDTH, HEIGTH = 800, 700
 
@@ -9,7 +13,7 @@ pygame.init()
 
 window = pygame.display.set_mode(screenSize)
 
-def menu(message='PACMAN', points=None):
+def menu(message='PACMAN', points=None): # O padrão é a tela inicial que começa com 'Pacman em cima'
   closeMenu = False
   pygame.display.flip()
   while not closeMenu:
@@ -20,7 +24,7 @@ def menu(message='PACMAN', points=None):
         if event.key == K_RETURN:
           closeMenu = True
     window.fill((0,0,0))
-    if message == 'YOU WIN':
+    if message == 'YOU WIN': # Tela se o usuário vencer
       printText(window, 'PACMAN', [400, 70], 50, (255, 199, 0), 'screens\pac-font.TTF')
       printText(window, message, (400, 170), 75, (255, 255, 255), 'screens\8-bit.TTF')
       printText(window, 'YOUR SCORE:', (400, 270), 40,(255, 255, 255), 'screens\8-bit.TTF')
@@ -28,7 +32,7 @@ def menu(message='PACMAN', points=None):
       printText(window, '1  2 3 4 5', [400, 420], 50, (255, 199, 0), 'screens\pac-font.TTF')
       printText(window, 'PRESS ENTER TO PLAY AGAIN', (400, 570), 40, (255, 255, 255), 'screens\8-bit.TTF')
       pygame.display.flip()
-    if message == 'GAME OVER':
+    if message == 'GAME OVER': # Tela se o usuário perder
       printText(window, 'PACMAN', [400, 70], 50, (38, 2, 255), 'screens\pac-font.TTF')
       printText(window, message, (400, 170), 75, (255, 255, 255), 'screens\8-bit.TTF')
       printText(window, 'YOUR SCORE:', (400, 270), 40,(255, 255, 255), 'screens\8-bit.TTF')
@@ -36,7 +40,7 @@ def menu(message='PACMAN', points=None):
       printText(window, '9 9  1  9 9', [400, 420], 50, (38, 2, 255), 'screens\pac-font.TTF')
       printText(window, 'PRESS ENTER TO PLAY AGAIN', (400, 570), 40, (255, 255, 255), 'screens\8-bit.TTF')
       pygame.display.flip()
-    else:
+    else: # Tela inicial do jogo
       printText(window, 'PACMAN', [400, 90], 60,(255, 199, 0), 'screens\pac-font.TTF')
       printText(window, '1', [200, 300], 90, (255, 199, 0), 'screens\pac-font.TTF')
       printText(window, '2 2 2 2', [410, 300], 90, (201, 0, 0), 'screens\pac-font.TTF')

@@ -1,3 +1,9 @@
+'''
+Arquivo responsável por gerenciar
+tudo que envolve o pacman
+'''
+
+# Importa módulos externos #
 import pygame, sys
 from pygame.locals import *
 from .maze import checkRoute
@@ -6,7 +12,7 @@ from .ghosts import ghostGetSpriteFrame, ghostNames
 general_spritesheet = pygame.image.load("spritesheet.png")
 
 WHITE = (255, 255, 255, 255)
-class Pac(pygame.sprite.Sprite):
+class Pac(pygame.sprite.Sprite): # Classe da entidade Pacman
   COLOR = (125, 125, 125)
   ACELERATION = 1
   directions = {'UP': False, 'DOWN': False, 'LEFT': False, 'RIGHT': False}
@@ -22,7 +28,7 @@ class Pac(pygame.sprite.Sprite):
     self.invencibility = False
     self.frameCount = 0
 
-  def movement(self, eventKey): #função pra mudar a direção do personagem
+  def movement(self, eventKey): # Função pra mudar a direção do personagem
     oldDirection = ''
     if eventKey == K_UP or eventKey == K_DOWN or K_LEFT or K_RIGHT:
       for i in self.directions:
@@ -41,13 +47,13 @@ class Pac(pygame.sprite.Sprite):
         self.directions[oldDirection] = False
         self.directions['RIGHT'] = True
   
-  def stopMove(self): #para o movimento do personagem
+  def stopMove(self): # Para o movimento do personagem
     for i in self.directions:
         self.directions[i] = False
 
-  def move(self): #função que muda a posição do personagem a cada ciclo
+  def move(self): # Move o personagem a cada ciclo (muda sua posição)
     if self.frameCount >= 3:
-      self.frameCount = 0
+      self.frameCount = 0  # Muda o frame da spritesheet do personagem a cada ciclo
     
     if self.directions['UP'] and checkRoute(self, 0, -1, self.routeMap, WHITE):
       self.rect.move_ip(0, -(self.ACELERATION))
@@ -71,13 +77,13 @@ class Pac(pygame.sprite.Sprite):
     if self.rect.left >= 651:
       self.rect.right = 155
     
-  def die(self):
+  def die(self): # Método que retorna o pacman pra sua posição inicial e diminui as vidas
     pygame.time.wait(500)
     self.stopMove()
     self.lifes -= 1
     self.rect.center = (400, 500)
   
-  def cherryPower(self, ghostsList, flag):
+  def cherryPower(self, ghostsList, flag): # Método que dá superpoder ao pacman
     self.invencibility = flag
     if self.invencibility:
       for ghost in ghostsList:
@@ -86,7 +92,7 @@ class Pac(pygame.sprite.Sprite):
       for i in range(4):
         ghostsList[i].scared = False
       
-def pacManGetSpriteFrame(direction):
+def pacManGetSpriteFrame(direction): # Função para gerenciar os splits da spritesheet
   yPos = {'RIGHT': 0, 'LEFT': 25, 'UP': 50, 'DOWN':75}
   
   startY = yPos[direction]
