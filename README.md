@@ -1,6 +1,6 @@
 # Pacman
 ![Game screenshot](https://user-images.githubusercontent.com/50156875/102347490-3c4ce180-3f7f-11eb-8384-eaaf743f35ee.jpg)
-)
+
 This Pacman remake was made in python3 with pygame as homework for the subject of Programming II.
 
 ## The game
